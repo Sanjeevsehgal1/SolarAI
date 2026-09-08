@@ -1,0 +1,144 @@
+<div class="page">
+
+  <header class="page-header">
+
+    <div class="header-row">
+
+      <div>
+
+        <h2>User Management</h2>
+
+        <span class="page-subtitle">Create users and assign plants</span>
+
+      </div>
+
+      <button class="btn-primary" (click)="showForm.set(!showForm())">
+
+        {{ showForm() ? 'Cancel' : '+ Add User' }}
+
+      </button>
+
+    </div>
+
+  </header>
+
+
+
+  @if (showForm()) {
+
+    <form class="form-card" (ngSubmit)="submit()">
+
+      <h3>New User</h3>
+
+      @if (error()) { <p class="form-error">{{ error() }}</p> }
+
+      <label>Full Name<input [(ngModel)]="form.fullName" name="fullName" required /></label>
+
+      <label>Email<input [(ngModel)]="form.email" name="email" type="email" required /></label>
+
+      <label>Phone<input [(ngModel)]="form.phone" name="phone" required /></label>
+
+      <label>Password<input [(ngModel)]="form.password" name="password" type="password" required /></label>
+
+      <label>Role
+
+        <select [(ngModel)]="form.role" name="role">
+
+          @for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+
+        </select>
+
+      </label>
+
+      @if (auth.isSuperAdmin() && orgs().length) {
+
+        <label>Company
+
+          <select [(ngModel)]="form.organizationId" name="orgId">
+
+            @for (o of orgs(); track o.id) {
+
+              <option [ngValue]="o.id">{{ o.name }}</option>
+
+            }
+
+          </select>
+
+        </label>
+
+      }
+
+      <div class="site-picks">
+
+        <span class="pick-label">Assign Plants</span>
+
+        @for (p of plants(); track p.id) {
+
+          <label class="check-label">
+
+            <input type="checkbox" [checked]="form.siteIds.includes(p.id)" (change)="toggleSite(p.id)" />
+
+            {{ p.name }} ({{ p.plantCode }})
+
+          </label>
+
+        }
+
+      </div>
+
+      <button type="submit" class="btn-primary">Create User</button>
+
+    </form>
+
+  }
+
+
+
+  @if (loading()) {
+
+    <div class="loading">Loading users</div>
+
+  } @else {
+
+    <div class="user-list">
+
+      @for (u of users(); track u.id) {
+
+        <div class="user-card" [class.inactive]="!u.isActive">
+
+          <div class="user-top">
+
+            <span class="role-tag">{{ u.role }}</span>
+
+            <span class="status" [class.active]="u.isActive">{{ u.isActive ? 'Active' : 'Inactive' }}</span>
+
+          </div>
+
+          <h3>{{ u.fullName }}</h3>
+
+          <p class="email">{{ u.email }}</p>
+
+          @if (u.organizationName) {
+
+            <p class="org">{{ u.organizationName }}</p>
+
+          }
+
+          @if (u.assignedSites.length) {
+            <p class="sites">Plants: @for (s of u.assignedSites; track s.id; let last = $last) { {{ s.name }}@if (!last) {, } }</p>
+          }
+
+        </div>
+
+      } @empty {
+
+        <p class="empty">No users found.</p>
+
+      }
+
+    </div>
+
+  }
+
+</div>
+

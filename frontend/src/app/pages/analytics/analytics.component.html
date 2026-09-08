@@ -1,0 +1,266 @@
+<div class="page">
+
+  <header class="page-header">
+
+    <div class="header-row">
+
+      <div>
+
+        <h2>Performance Analytics</h2>
+
+        <span class="page-subtitle">Generation trends, soiling analysis and operational KPIs</span>
+
+      </div>
+
+      <div class="period-filter">
+
+        @for (p of [7, 30, 90]; track p) {
+
+          <button [class.active]="periodDays() === p" (click)="setPeriod(p)">{{ p }}d</button>
+
+        }
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+
+  @if (loading()) {
+
+    <div class="loading">Loading analytics data</div>
+
+  } @else if (data(); as d) {
+
+    <div class="analytics-dashboard">
+
+    <div class="kpi-row">
+
+      <div class="kpi">
+
+        <span class="kpi-val metric-value">{{ d.avgPr7Days | number:'1.1-1' }}<small>%</small></span>
+
+        <span class="kpi-label">Avg PR (7d)</span>
+
+      </div>
+
+      <div class="kpi">
+
+        <span class="kpi-val metric-value">{{ d.totalActualKwh | number:'1.0-0' }}<small>kWh</small></span>
+
+        <span class="kpi-label">Total Generated</span>
+
+      </div>
+
+      <div class="kpi">
+
+        <span class="kpi-val metric-value">{{ d.avgSoilingIndex | number:'1.1-1' }}<small>%</small></span>
+
+        <span class="kpi-label">Avg Soiling</span>
+
+      </div>
+
+      <div class="kpi">
+
+        <span class="kpi-val metric-value">{{ d.totalFaultsOpen }}</span>
+
+        <span class="kpi-label">Open Faults</span>
+
+      </div>
+
+      <div class="kpi">
+
+        <span class="kpi-val metric-value">{{ d.tasksCompletedThisWeek }}</span>
+
+        <span class="kpi-label">Tasks Done</span>
+
+      </div>
+
+      <div class="kpi">
+
+        <span class="kpi-val metric-value">{{ d.tasksPending }}</span>
+
+        <span class="kpi-label">Pending</span>
+
+      </div>
+
+    </div>
+
+
+
+    <section class="chart-section">
+
+      <p class="section-title">Daily Generation</p>
+
+      <h3 class="chart-desc">Actual vs theoretical output over {{ periodDays() }} days</h3>
+
+      <div class="chart-wrap chart-wrap--lg">
+
+        <canvas #genChart></canvas>
+
+      </div>
+
+    </section>
+
+
+
+    <div class="chart-grid">
+
+      <section class="chart-section">
+
+        <p class="section-title">Performance Ratio</p>
+
+        <h3 class="chart-desc">Daily PR trend (target 82%)</h3>
+
+        <div class="chart-wrap">
+
+          <canvas #prChart></canvas>
+
+        </div>
+
+      </section>
+
+
+
+      <section class="chart-section">
+
+        <p class="section-title">Environmental</p>
+
+        <h3 class="chart-desc">Irradiance and cell temperature</h3>
+
+        <div class="chart-wrap">
+
+          <canvas #irrChart></canvas>
+
+        </div>
+
+      </section>
+
+    </div>
+
+
+
+    <div class="chart-grid">
+
+      <section class="chart-section">
+
+        <p class="section-title">Zone Soiling</p>
+
+        <h3 class="chart-desc">Current soiling index by zone</h3>
+
+        <div class="chart-wrap">
+
+          <canvas #soilChart></canvas>
+
+        </div>
+
+      </section>
+
+
+
+      <section class="chart-section table-section">
+
+        <p class="section-title">Zone Breakdown</p>
+
+        <h3 class="chart-desc">Soiling and estimated generation loss</h3>
+
+        <div class="data-table">
+
+          <div class="table-head">
+
+            <span>Zone</span>
+
+            <span>Soiling</span>
+
+            <span>Loss</span>
+
+            <span>Priority</span>
+
+          </div>
+
+          @for (z of d.zoneSoiling; track z.zoneId) {
+
+            <div class="table-row">
+
+              <span class="zone-name">{{ z.zoneName }}</span>
+
+              <span class="soil-val" [style.color]="soilingColor(z.soilingIndex)">
+
+                {{ z.soilingIndex | number:'1.1-1' }}%
+
+              </span>
+
+              <span>{{ z.estimatedLossPercent | number:'1.1-1' }}%</span>
+
+              <span class="priority-tag" [class]="z.priorityLevel.toLowerCase()">{{ z.priorityLevel }}</span>
+
+            </div>
+
+          } @empty {
+
+            <p class="empty">No soiling data available.</p>
+
+          }
+
+        </div>
+
+      </section>
+
+    </div>
+
+
+
+    <section class="faults-section">
+
+      <div class="section-header">
+
+        <div>
+
+          <p class="section-title">Open Faults</p>
+
+          <h3 class="chart-desc">{{ d.totalFaultsOpen }} active alerts requiring attention</h3>
+
+        </div>
+
+        <a routerLink="/faults" class="view-all">View all</a>
+
+      </div>
+
+      <div class="fault-list">
+
+        @for (f of d.openFaults; track f.id) {
+
+          <a routerLink="/faults" class="fault-row">
+
+            <span class="severity-tag" [class]="severityClass(f.severity)">{{ f.severity }}</span>
+
+            <div class="fault-info">
+
+              <span class="fault-title">{{ f.title }}</span>
+
+              <span class="fault-meta">{{ f.status }} · {{ f.zoneName || 'Site-wide' }}</span>
+
+            </div>
+
+            <span class="fault-date">{{ f.detectedAt | date:'MMM d' }}</span>
+
+          </a>
+
+        } @empty {
+
+          <p class="empty">No open faults — all systems nominal.</p>
+
+        }
+
+      </div>
+
+    </section>
+
+    </div>
+
+  }
+
+</div>
+

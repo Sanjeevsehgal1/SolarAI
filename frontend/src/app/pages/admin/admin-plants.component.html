@@ -1,0 +1,59 @@
+<div class="page">
+  <header class="page-header">
+    <div class="header-row">
+      <div>
+        <h2>Plants</h2>
+        <span class="page-subtitle">Manage solar plants across organizations</span>
+      </div>
+      @if (auth.canManagePlants()) {
+        <button class="btn-primary" (click)="showForm.set(!showForm())">
+          {{ showForm() ? 'Cancel' : '+ Add Plant' }}
+        </button>
+      }
+    </div>
+  </header>
+
+  @if (showForm()) {
+    <form class="form-card" (ngSubmit)="submit()">
+      <h3>New Plant</h3>
+      @if (error()) { <p class="form-error">{{ error() }}</p> }
+      @if (auth.isSuperAdmin()) {
+        <label>Organization
+          <select [(ngModel)]="form.organizationId" name="orgId" required>
+            @for (org of orgs(); track org.id) {
+              <option [ngValue]="org.id">{{ org.name }}</option>
+            }
+          </select>
+        </label>
+      }
+      <label>Plant Name<input [(ngModel)]="form.name" name="name" required /></label>
+      <label>Plant Code<input [(ngModel)]="form.plantCode" name="code" required placeholder="RJ-250" /></label>
+      <label>Location<input [(ngModel)]="form.location" name="location" required /></label>
+      <label>Capacity (MW)<input [(ngModel)]="form.capacityMw" name="mw" type="number" step="0.1" min="0.1" /></label>
+      <label>Target PR<input [(ngModel)]="form.targetPr" name="pr" type="number" min="50" max="100" /></label>
+      <button type="submit" class="btn-primary">Create Plant</button>
+    </form>
+  }
+
+  @if (loading()) {
+    <div class="loading">Loading plants</div>
+  } @else {
+    <div class="plant-list">
+      @for (plant of plants(); track plant.id) {
+        <div class="plant-card">
+          <div class="plant-top">
+            <span class="plant-code">{{ plant.plantCode || 'PL-' + plant.id }}</span>
+            <span class="capacity">{{ plant.capacityMw | number:'1.1-1' }} MW</span>
+          </div>
+          <h3>{{ plant.name }}</h3>
+          <p class="location">{{ plant.location }}</p>
+          @if (plant.organizationName) {
+            <span class="org-tag">{{ plant.organizationName }}</span>
+          }
+        </div>
+      } @empty {
+        <p class="empty">No plants configured yet.</p>
+      }
+    </div>
+  }
+</div>

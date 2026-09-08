@@ -1,0 +1,84 @@
+<div class="page">
+  <header class="page-header">
+    <div class="header-row">
+      <div>
+        <h2>Fault Alerts</h2>
+        <span class="page-subtitle">Predictive and detected system anomalies</span>
+      </div>
+      @if (auth.showAnalytics()) {
+        <button class="btn-primary ai-btn" [disabled]="predicting()" (click)="runAiPrediction()">
+          {{ predicting() ? 'Running AI...' : 'Run AI Prediction' }}
+        </button>
+      }
+    </div>
+    @if (actionMsg()) { <p class="action-msg">{{ actionMsg() }}</p> }
+    <div class="filters">
+      @for (f of ['all', 'Open', 'Acknowledged', 'Assigned', 'Escalated', 'Resolved']; track f) {
+        <button [class.active]="filter() === f" (click)="setFilter(f)">{{ f === 'all' ? 'All' : f }}</button>
+      }
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="loading">Loading fault records</div>
+  } @else {
+    <div class="fault-list">
+      @for (fault of faults(); track fault.id) {
+        <div class="fault-card" (click)="openDetail(fault)">
+          <div class="fault-type-badge" [class]="typeClass(fault.type)">{{ typeLabel(fault.type) }}</div>
+          <div class="fault-body">
+            <div class="fault-top">
+              <span class="severity-tag" [class]="severityClass(fault.severity)">{{ fault.severity }}</span>
+              @if (fault.isPredicted) {
+                <span class="ai-tag">AI {{ fault.confidenceScore | number:'1.0-0' }}%</span>
+              }
+            </div>
+            <h3>{{ fault.title }}</h3>
+            <p class="status">{{ fault.status }} · {{ fault.zoneName || 'Site-wide' }}</p>
+            <p class="time">{{ fault.detectedAt | date:'medium' }}</p>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      } @empty {
+        <p class="empty">No fault records match the current filter.</p>
+      }
+    </div>
+  }
+
+  @if (selected(); as f) {
+    <div class="modal-overlay" (click)="closeDetail()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <span class="fault-type-badge lg" [class]="typeClass(f.type)">{{ typeLabel(f.type) }}</span>
+          <h3>{{ f.title }}</h3>
+        </div>
+        <p class="desc">{{ f.description }}</p>
+        @if (f.isPredicted && f.confidenceScore) {
+          <div class="ai-prediction-box">
+            <strong>AI Prediction</strong>
+            <p>Confidence: {{ f.confidenceScore | number:'1.0-0' }}% — Inspection recommended if health score is declining.</p>
+          </div>
+        }
+        <div class="detail-grid">
+          <div class="detail-item"><span class="label">Severity</span><span class="severity-tag" [class]="severityClass(f.severity)">{{ f.severity }}</span></div>
+          <div class="detail-item"><span class="label">Status</span><span>{{ f.status }}</span></div>
+          <div class="detail-item"><span class="label">Zone</span><span>{{ f.zoneName || 'N/A' }}</span></div>
+          @if (f.assignedToName) {
+            <div class="detail-item"><span class="label">Assigned</span><span>{{ f.assignedToName }}</span></div>
+          }
+        </div>
+        @if (f.status !== 'Resolved') {
+          <div class="action-buttons">
+            @if (f.status === 'Open') {
+              <button class="btn-secondary" (click)="acknowledgeFault()">Acknowledge</button>
+            }
+            <button class="btn-secondary" (click)="createMaintenance()">Create Maintenance</button>
+            <button class="btn-secondary warn" (click)="escalateFault()">Escalate</button>
+            <button class="btn-success btn-resolve" (click)="resolveFault()">Resolve</button>
+          </div>
+        }
+        <button class="btn-secondary btn-close" (click)="closeDetail()">Close</button>
+      </div>
+    </div>
+  }
+</div>

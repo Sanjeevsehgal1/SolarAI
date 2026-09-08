@@ -1,0 +1,32 @@
+<div class="page">
+  <header class="page-header">
+    <h2>Reports</h2>
+    <span class="page-subtitle">Plant performance, maintenance, AI predictions and downtime</span>
+  </header>
+
+  @if (loading()) {
+    <div class="loading">Loading reports</div>
+  } @else {
+    <div class="report-list">
+      @for (r of reports(); track r.reportType) {
+        <div class="report-card" (click)="openReport(r)">
+          <div class="report-type">{{ r.reportType }}</div>
+          <h3>{{ r.title }}</h3>
+          <p>{{ r.period }} · Generated {{ r.generatedAt | date:'medium' }}</p>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      }
+    </div>
+  }
+
+  @if (selected(); as r) {
+    <div class="modal-overlay" (click)="closeReport()">
+      <div class="modal report-modal" (click)="$event.stopPropagation()">
+        <h3>{{ r.title }}</h3>
+        <p class="period">{{ r.period }}</p>
+        <pre class="report-data">{{ r.data | json }}</pre>
+        <button class="btn-secondary" (click)="closeReport()">Close</button>
+      </div>
+    </div>
+  }
+</div>

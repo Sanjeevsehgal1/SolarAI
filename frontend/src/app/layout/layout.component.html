@@ -1,0 +1,311 @@
+<div class="app-shell">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-brand">
+
+      <div class="brand-mark">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+          <circle cx="12" cy="12" r="4"/>
+
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+
+        </svg>
+
+      </div>
+
+      <div class="brand-text">
+
+        <span class="brand-name">SolarShield</span>
+
+        <span class="brand-tag">{{ auth.currentUser()?.organizationName || 'Asset Monitor' }}</span>
+
+      </div>
+
+    </div>
+
+
+
+    <nav class="sidebar-nav">
+
+      @if (auth.isSuperAdmin()) {
+
+        <a routerLink="/admin/platform" routerLinkActive="active">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+
+          <span>Platform</span>
+
+        </a>
+
+      }
+
+      <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+
+        <span>Dashboard</span>
+
+      </a>
+
+      <a routerLink="/faults" routerLinkActive="active">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+
+        <span>Faults</span>
+
+      </a>
+
+      <a routerLink="/tasks" routerLinkActive="active">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+
+        <span>Tasks</span>
+
+      </a>
+
+      <a routerLink="/assets" routerLinkActive="active">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+
+        <span>Assets</span>
+
+      </a>
+
+      <a routerLink="/scada" routerLinkActive="active">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+
+        <span>SCADA</span>
+
+      </a>
+
+      <a routerLink="/cleaning" routerLinkActive="active">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+
+        <span>Cleaning</span>
+
+      </a>
+
+      @if (auth.showAnalytics()) {
+
+        <a routerLink="/analytics" routerLinkActive="active">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+
+          <span>Analytics</span>
+
+        </a>
+
+      }
+
+      @if (auth.canManagePlants()) {
+
+        <a routerLink="/admin/plants" routerLinkActive="active">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+
+          <span>Plants</span>
+
+        </a>
+
+      }
+
+      @if (auth.showAnalytics()) {
+
+        <a routerLink="/reports" routerLinkActive="active">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+
+          <span>Reports</span>
+
+        </a>
+
+      }
+
+      @if (auth.canViewBilling()) {
+
+        <a routerLink="/billing" routerLinkActive="active">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+
+          <span>Billing</span>
+
+        </a>
+
+      }
+
+      @if (auth.canManageUsers()) {
+
+        <a routerLink="/admin/users" routerLinkActive="active">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+
+          <span>Users</span>
+
+        </a>
+
+      }
+
+      <a routerLink="/profile" routerLinkActive="active">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+
+        <span>Profile</span>
+
+      </a>
+
+    </nav>
+
+  </aside>
+
+
+
+  <div class="main-column">
+
+    <header class="app-header">
+
+      <div class="brand brand--mobile">
+
+        <div class="brand-mark">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+            <circle cx="12" cy="12" r="4"/>
+
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+
+          </svg>
+
+        </div>
+
+        <div class="brand-text">
+
+          <span class="brand-name">SolarShield</span>
+
+          <span class="brand-tag">{{ auth.currentUser()?.organizationName || 'Asset Monitor' }}</span>
+
+        </div>
+
+      </div>
+
+
+
+      @if (plantContext.accessibleSites().length > 1) {
+
+        <select class="plant-select" [value]="plantContext.selectedSiteId() ?? ''" (change)="onPlantChange($event)">
+
+          @for (site of plantContext.accessibleSites(); track site.id) {
+
+            <option [value]="site.id">{{ site.name }}</option>
+
+          }
+
+        </select>
+
+      } @else if (plantContext.selectedSite(); as site) {
+
+        <span class="plant-label">{{ site.name }}</span>
+
+      }
+
+
+
+      <div class="header-status">
+
+        <span class="status-dot online"></span>
+
+        <span>Live</span>
+
+      </div>
+
+    </header>
+
+
+
+    <main class="content">
+
+      <router-outlet />
+
+    </main>
+
+  </div>
+
+
+
+  <nav class="bottom-nav">
+
+    @if (auth.isSuperAdmin()) {
+
+      <a routerLink="/admin/platform" routerLinkActive="active">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+
+        <span class="nav-label">Platform</span>
+
+      </a>
+
+    }
+
+    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+
+      <span class="nav-label">Dashboard</span>
+
+    </a>
+
+    <a routerLink="/faults" routerLinkActive="active">
+
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+
+      <span class="nav-label">Faults</span>
+
+    </a>
+
+    <a routerLink="/tasks" routerLinkActive="active">
+
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+
+      <span class="nav-label">Tasks</span>
+
+    </a>
+
+    @if (auth.showAnalytics()) {
+
+      <a routerLink="/analytics" routerLinkActive="active">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+
+        <span class="nav-label">Analytics</span>
+
+      </a>
+
+    }
+
+    @if (auth.canManageUsers()) {
+
+      <a routerLink="/admin/users" routerLinkActive="active">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+
+        <span class="nav-label">Users</span>
+
+      </a>
+
+    }
+
+    <a routerLink="/profile" routerLinkActive="active">
+
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+
+      <span class="nav-label">Profile</span>
+
+    </a>
+
+  </nav>
+
+</div>

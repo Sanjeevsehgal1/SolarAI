@@ -1,0 +1,137 @@
+<div class="page">
+
+  <header class="page-header">
+
+    <h2>Platform Control</h2>
+
+    <span class="page-subtitle">Super Admin — all companies, plants and users</span>
+
+  </header>
+
+
+
+  @if (loading()) {
+
+    <div class="loading">Loading platform data</div>
+
+  } @else if (stats(); as s) {
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+
+        <span class="stat-val metric-value">{{ s.totalOrganizations }}</span>
+
+        <span class="stat-label">Companies</span>
+
+      </div>
+
+      <div class="stat-card">
+
+        <span class="stat-val metric-value">{{ s.totalPlants }}</span>
+
+        <span class="stat-label">Plants</span>
+
+      </div>
+
+      <div class="stat-card">
+
+        <span class="stat-val metric-value">{{ s.totalCapacityMw | number:'1.0-0' }}<small>MW</small></span>
+
+        <span class="stat-label">Total Capacity</span>
+
+      </div>
+
+      <div class="stat-card">
+
+        <span class="stat-val metric-value">{{ s.totalUsers }}</span>
+
+        <span class="stat-label">Users</span>
+
+      </div>
+
+      <div class="stat-card warn">
+
+        <span class="stat-val metric-value">{{ s.openFaults }}</span>
+
+        <span class="stat-label">Active Alerts</span>
+
+      </div>
+
+      <div class="stat-card critical">
+
+        <span class="stat-val metric-value">{{ s.criticalAlerts ?? 0 }}</span>
+
+        <span class="stat-label">Critical Alerts</span>
+
+      </div>
+
+      <div class="stat-card">
+
+        <span class="stat-val metric-value">{{ s.activeSubscriptions ?? s.activeOrganizations }}</span>
+
+        <span class="stat-label">Active Subscriptions</span>
+
+      </div>
+
+      <div class="stat-card">
+
+        <span class="stat-val metric-value">₹{{ s.monthlyRevenue ?? 0 | number:'1.0-0' }}</span>
+
+        <span class="stat-label">Monthly Revenue</span>
+
+      </div>
+
+    </div>
+
+
+
+    <p class="section-title">Administration</p>
+
+    <div class="admin-links">
+
+      <a routerLink="/admin/organizations" class="admin-link">
+
+        <span class="link-title">Companies</span>
+
+        <span class="link-desc">Create and manage customer organizations</span>
+
+      </a>
+
+      <a routerLink="/admin/plants" class="admin-link">
+
+        <span class="link-title">Plants</span>
+
+        <span class="link-desc">Manage plants across all companies</span>
+
+      </a>
+
+      <a routerLink="/admin/users" class="admin-link">
+
+        <span class="link-title">Users</span>
+
+        <span class="link-desc">Manage roles and plant assignments</span>
+
+      </a>
+
+      <a routerLink="/billing" class="admin-link">
+
+        <span class="link-title">Billing</span>
+
+        <span class="link-desc">Subscriptions and invoice overview</span>
+
+      </a>
+
+      <a routerLink="/home" class="admin-link">
+
+        <span class="link-title">Operations</span>
+
+        <span class="link-desc">Go to plant operations dashboard</span>
+
+      </a>
+
+    </div>
+
+  }
+
+</div>

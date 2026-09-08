@@ -1,0 +1,59 @@
+<div class="page">
+  <header class="page-header">
+    <div class="header-row">
+      <div>
+        <h2>Companies</h2>
+        <span class="page-subtitle">Manage customer organizations and subscriptions</span>
+      </div>
+      <button class="btn-primary" (click)="showForm.set(!showForm())">
+        {{ showForm() ? 'Cancel' : '+ Add Company' }}
+      </button>
+    </div>
+  </header>
+
+  @if (showForm()) {
+    <form class="form-card" (ngSubmit)="submit()">
+      <h3>New Company</h3>
+      @if (error()) { <p class="form-error">{{ error() }}</p> }
+      <label>Name<input [(ngModel)]="form.name" name="name" required /></label>
+      <label>Code<input [(ngModel)]="form.code" name="code" required placeholder="ABC" /></label>
+      <label>Contact Email<input [(ngModel)]="form.contactEmail" name="email" type="email" /></label>
+      <label>Plan
+        <select [(ngModel)]="form.subscriptionPlan" name="plan">
+          <option>Standard</option>
+          <option>Enterprise</option>
+          <option>Premium</option>
+        </select>
+      </label>
+      <label>Max Plants<input [(ngModel)]="form.maxPlants" name="maxPlants" type="number" min="1" /></label>
+      <button type="submit" class="btn-primary">Create Company</button>
+    </form>
+  }
+
+  @if (loading()) {
+    <div class="loading">Loading companies</div>
+  } @else {
+    <div class="org-list">
+      @for (org of orgs(); track org.id) {
+        <div class="org-card" [class.inactive]="!org.isActive">
+          <div class="org-top">
+            <span class="org-code">{{ org.code }}</span>
+            <span class="status" [class.active]="org.isActive">{{ org.isActive ? 'Active' : 'Inactive' }}</span>
+          </div>
+          <h3>{{ org.name }}</h3>
+          <div class="org-meta">
+            <span>{{ org.plantCount }} / {{ org.maxPlants }} plants</span>
+            <span>{{ org.userCount }} users</span>
+            <span>{{ org.totalCapacityMw | number:'1.1-1' }} MW</span>
+            <span>{{ org.subscriptionPlan }}</span>
+          </div>
+          <button class="btn-secondary" (click)="toggleActive(org)">
+            {{ org.isActive ? 'Deactivate' : 'Activate' }}
+          </button>
+        </div>
+      } @empty {
+        <p class="empty">No companies found.</p>
+      }
+    </div>
+  }
+</div>

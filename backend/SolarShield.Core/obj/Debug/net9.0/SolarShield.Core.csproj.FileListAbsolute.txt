@@ -1,0 +1,11 @@
+D:\SolarShield AI\backend\SolarShield.Core\obj\Debug\net9.0\SolarShield.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\SolarShield AI\backend\SolarShield.Core\obj\Debug\net9.0\SolarShield.Core.AssemblyInfoInputs.cache
+D:\SolarShield AI\backend\SolarShield.Core\obj\Debug\net9.0\SolarShield.Core.AssemblyInfo.cs
+D:\SolarShield AI\backend\SolarShield.Core\obj\Debug\net9.0\SolarShield.Core.csproj.CoreCompileInputs.cache
+D:\SolarShield AI\backend\SolarShield.Core\bin\Debug\net9.0\SolarShield.Core.deps.json
+D:\SolarShield AI\backend\SolarShield.Core\bin\Debug\net9.0\SolarShield.Core.dll
+D:\SolarShield AI\backend\SolarShield.Core\bin\Debug\net9.0\SolarShield.Core.pdb
+D:\SolarShield AI\backend\SolarShield.Core\obj\Debug\net9.0\SolarShield.Core.dll
+D:\SolarShield AI\backend\SolarShield.Core\obj\Debug\net9.0\refint\SolarShield.Core.dll
+D:\SolarShield AI\backend\SolarShield.Core\obj\Debug\net9.0\SolarShield.Core.pdb
+D:\SolarShield AI\backend\SolarShield.Core\obj\Debug\net9.0\ref\SolarShield.Core.dll

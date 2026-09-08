@@ -1,0 +1,17 @@
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\SolarShield.Infrastructure.csproj.AssemblyReference.cache
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\SolarShield.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\SolarShield.Infrastructure.AssemblyInfoInputs.cache
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\SolarShield.Infrastructure.AssemblyInfo.cs
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\SolarShield.Infrastructure.csproj.CoreCompileInputs.cache
+D:\SolarShield AI\backend\SolarShield.Infrastructure\bin\Debug\net9.0\SolarShield.Infrastructure.deps.json
+D:\SolarShield AI\backend\SolarShield.Infrastructure\bin\Debug\net9.0\SolarShield.Infrastructure.runtimeconfig.json
+D:\SolarShield AI\backend\SolarShield.Infrastructure\bin\Debug\net9.0\SolarShield.Infrastructure.dll
+D:\SolarShield AI\backend\SolarShield.Infrastructure\bin\Debug\net9.0\SolarShield.Infrastructure.pdb
+D:\SolarShield AI\backend\SolarShield.Infrastructure\bin\Debug\net9.0\SolarShield.Core.dll
+D:\SolarShield AI\backend\SolarShield.Infrastructure\bin\Debug\net9.0\SolarShield.Core.pdb
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\SolarShi.59AB19D3.Up2Date
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\SolarShield.Infrastructure.dll
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\refint\SolarShield.Infrastructure.dll
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\SolarShield.Infrastructure.pdb
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\SolarShield.Infrastructure.genruntimeconfig.cache
+D:\SolarShield AI\backend\SolarShield.Infrastructure\obj\Debug\net9.0\ref\SolarShield.Infrastructure.dll

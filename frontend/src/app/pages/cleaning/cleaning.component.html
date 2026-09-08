@@ -1,0 +1,63 @@
+<div class="page">
+  <header class="page-header">
+    <h2>Cleaning Operations</h2>
+    <span class="page-subtitle">Zone soiling analysis and maintenance schedule</span>
+  </header>
+
+  @if (loading()) {
+    <div class="loading">Loading cleaning data</div>
+  } @else {
+    <section class="zone-grid">
+      <p class="section-title">Zone Soiling Index</p>
+      <div class="zones">
+        @for (zone of soiling(); track zone.zoneId) {
+          <div class="zone-card" [class]="zone.priorityLevel.toLowerCase()">
+            <div class="zone-header">
+              <span class="zone-name">{{ zone.zoneName }}</span>
+              <span class="priority-badge" [class]="zone.priorityLevel.toLowerCase()">{{ zone.priorityLevel }}</span>
+            </div>
+            <div class="soiling-value metric-value" [style.color]="soilingColor(zone.soilingIndex)">
+              {{ zone.soilingIndex | number:'1.1-1' }}<small>%</small>
+            </div>
+            <div class="loss">Est. loss: {{ zone.estimatedLossPercent | number:'1.1-1' }}%</div>
+            <div class="zone-bar">
+              <div class="zone-bar-fill" [style.width.%]="zone.soilingIndex" [style.background]="soilingColor(zone.soilingIndex)"></div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="schedules">
+      <p class="section-title">Scheduled Maintenance</p>
+      @for (s of schedules(); track s.id) {
+        <div class="schedule-card" [class.completed]="s.isCompleted">
+          <div class="schedule-date">
+            <span class="day metric-value">{{ s.scheduledDate | date:'dd' }}</span>
+            <span class="month">{{ s.scheduledDate | date:'MMM' }}</span>
+          </div>
+          <div class="schedule-info">
+            <h4>{{ s.zoneName }}</h4>
+            <p>
+              Soiling {{ s.soilingIndexAtSchedule | number:'1.1-1' }}%
+              · Priority {{ priorityLabel(s.priority) }}
+            </p>
+            @if (s.isCompleted) {
+              <span class="done-badge">Completed</span>
+            }
+          </div>
+        </div>
+      } @empty {
+        <p class="empty">No cleaning schedules found.</p>
+      }
+    </section>
+
+    <div class="robot-sync">
+      <div class="sync-info">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h6"/></svg>
+        <span>Autonomous Robot Integration</span>
+      </div>
+      <span class="coming-soon">Coming Soon</span>
+    </div>
+  }
+</div>

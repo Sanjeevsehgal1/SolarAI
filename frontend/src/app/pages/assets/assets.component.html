@@ -1,0 +1,49 @@
+<div class="page">
+  <header class="page-header">
+    <h2>Assets</h2>
+    <span class="page-subtitle">Inverters, transformers, sensors and equipment health</span>
+    <div class="filters">
+      @for (f of ['all', 'Inverter', 'Transformer', 'WeatherStation', 'Sensor']; track f) {
+        <button [class.active]="filter() === f" (click)="filter.set(f)">{{ f === 'all' ? 'All' : f }}</button>
+      }
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="loading">Loading assets</div>
+  } @else {
+    <div class="asset-grid">
+      @for (asset of filtered(); track asset.id) {
+        <div class="asset-card">
+          <div class="asset-top">
+            <span class="asset-code">{{ asset.assetCode }}</span>
+            <span class="type-tag">{{ asset.type }}</span>
+          </div>
+          <h3>{{ asset.manufacturer }} {{ asset.model }}</h3>
+          <p class="location">{{ asset.location }} · {{ asset.zoneName || asset.siteName }}</p>
+          <div class="asset-metrics">
+            <div class="metric">
+              <span class="label">Health</span>
+              <span class="value" [class]="healthClass(asset.healthScore)">{{ asset.healthScore | number:'1.0-0' }}%</span>
+            </div>
+            <div class="metric">
+              <span class="label">Status</span>
+              <span class="value" [class]="statusClass(asset.status)">{{ asset.status }}</span>
+            </div>
+            @if (asset.capacityKw > 0) {
+              <div class="metric">
+                <span class="label">Capacity</span>
+                <span class="value">{{ asset.capacityKw | number:'1.0-0' }} kW</span>
+              </div>
+            }
+          </div>
+          @if (asset.lastMaintenanceAt) {
+            <p class="maint">Last maintenance: {{ asset.lastMaintenanceAt | date:'mediumDate' }}</p>
+          }
+        </div>
+      } @empty {
+        <p class="empty">No assets found for this plant.</p>
+      }
+    </div>
+  }
+</div>

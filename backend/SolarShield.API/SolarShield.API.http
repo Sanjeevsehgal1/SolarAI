@@ -1,0 +1,6 @@
+@SolarShield.API_HostAddress = http://localhost:5034
+
+GET {{SolarShield.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

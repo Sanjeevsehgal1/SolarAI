@@ -1,0 +1,73 @@
+.asset-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .asset-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.asset-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.asset-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.asset-code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.type-tag {
+  font-size: 0.7rem;
+  background: var(--color-border-subtle);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+.location {
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+}
+
+.asset-metrics {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.metric .label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.metric .value {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.health-good { color: var(--color-success); }
+.health-warn { color: var(--color-warning); }
+.health-bad { color: var(--color-danger); }
+
+.status-online { color: var(--color-success); }
+.status-warning { color: var(--color-warning); }
+.status-critical, .status-offline { color: var(--color-danger); }
+
+.maint {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}

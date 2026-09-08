@@ -1,0 +1,43 @@
+<div class="page">
+  <header class="page-header">
+    <h2>Billing</h2>
+    <span class="page-subtitle">Subscription, MW monitoring and invoice history</span>
+  </header>
+
+  @if (loading()) {
+    <div class="loading">Loading billing data</div>
+  } @else if (billing(); as b) {
+    <div class="billing-summary">
+      <div class="plan-card">
+        <span class="label">Current Plan</span>
+        <span class="plan-name">{{ b.currentPlan }}</span>
+        <span class="meta">{{ b.mwMonitored | number:'1.1-1' }} MW monitored</span>
+        <span class="meta">Next billing: {{ b.nextBillingDate | date:'mediumDate' }}</span>
+      </div>
+      <div class="invoice-current">
+        <span class="label">Current Invoice</span>
+        <span class="amount">₹{{ b.currentInvoiceTotal | number:'1.0-0' }}</span>
+        <span class="status" [class.paid]="b.currentInvoiceStatus === 'Paid'">{{ b.currentInvoiceStatus }}</span>
+      </div>
+    </div>
+
+    <p class="section-title">Invoice History</p>
+    <div class="invoice-list">
+      @for (inv of b.invoices; track inv.id) {
+        <div class="invoice-row">
+          <div>
+            <span class="inv-num">{{ inv.invoiceNumber }}</span>
+            <span class="period">{{ inv.billingPeriod }}</span>
+          </div>
+          <div class="inv-details">
+            <span>{{ inv.totalMw | number:'1.1-1' }} MW</span>
+            <span class="total">₹{{ inv.total | number:'1.0-0' }}</span>
+            <span class="status" [class.paid]="inv.status === 'Paid'">{{ inv.status }}</span>
+          </div>
+        </div>
+      } @empty {
+        <p class="empty">No invoices yet.</p>
+      }
+    </div>
+  }
+</div>

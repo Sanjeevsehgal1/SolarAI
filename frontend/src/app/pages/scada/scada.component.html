@@ -1,0 +1,43 @@
+<div class="page">
+  <header class="page-header">
+    <h2>SCADA Monitoring</h2>
+    <span class="page-subtitle">Real-time plant data from SCADA / IoT pipeline</span>
+  </header>
+
+  @if (loading()) {
+    <div class="loading">Loading SCADA data</div>
+  } @else if (snapshot(); as s) {
+    <div class="live-bar">
+      <span class="live-dot" [class.offline]="!commOk(s.communicationStatus)"></span>
+      <span>{{ s.communicationStatus }} · Updated {{ s.recordedAt | date:'mediumTime' }}</span>
+    </div>
+
+    <p class="section-title">Plant Overview — {{ s.siteName }}</p>
+    <div class="scada-grid">
+      <div class="scada-card"><span class="label">Voltage</span><span class="val">{{ s.voltage | number:'1.1-1' }} V</span></div>
+      <div class="scada-card"><span class="label">Current</span><span class="val">{{ s.current | number:'1.1-1' }} A</span></div>
+      <div class="scada-card highlight"><span class="label">Power</span><span class="val">{{ s.powerKw | number:'1.0-0' }} kW</span></div>
+      <div class="scada-card"><span class="label">Temperature</span><span class="val">{{ s.temperature | number:'1.1-1' }} °C</span></div>
+      <div class="scada-card"><span class="label">Frequency</span><span class="val">{{ s.frequency | number:'1.2-2' }} Hz</span></div>
+      <div class="scada-card"><span class="label">Generation</span><span class="val">{{ s.energyGenerationKwh | number:'1.0-0' }} kWh</span></div>
+      <div class="scada-card"><span class="label">Inverter Status</span><span class="val">{{ s.inverterStatus }}</span></div>
+      <div class="scada-card"><span class="label">Communication</span><span class="val" [class.ok]="commOk(s.communicationStatus)">{{ s.communicationStatus }}</span></div>
+    </div>
+
+    <p class="section-title">Asset Telemetry</p>
+    <div class="asset-table">
+      @for (a of s.assets; track a.assetId) {
+        <div class="asset-row">
+          <span class="code">{{ a.assetCode }}</span>
+          <span class="type">{{ a.type }}</span>
+          <span>{{ a.powerKw | number:'1.0-0' }} kW</span>
+          <span>{{ a.temperature | number:'1.0-0' }} °C</span>
+          <span [class.warn]="a.healthScore < 70">{{ a.healthScore | number:'1.0-0' }}%</span>
+          <span>{{ a.status }}</span>
+        </div>
+      } @empty {
+        <p class="empty">No asset-level telemetry available.</p>
+      }
+    </div>
+  }
+</div>

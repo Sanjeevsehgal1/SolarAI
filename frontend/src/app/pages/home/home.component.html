@@ -1,0 +1,190 @@
+<div class="page">
+  <header class="top-bar">
+    <div>
+      <h2>{{ auth.canManagePlants() && !auth.isSuperAdmin() ? 'Company Dashboard' : 'Operations Dashboard' }}</h2>
+      @if (summary()) {
+        <span class="site-name">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          {{ summary()!.siteName }}
+        </span>
+      }
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" (click)="toggleNotifications()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        @if (unreadCount() > 0) { <span class="badge">{{ unreadCount() }}</span> }
+      </button>
+    </div>
+  </header>
+
+  @if (showNotifications()) {
+    <div class="notif-panel">
+      @for (n of notifications(); track n.id) {
+        <div class="notif-item" [class.unread]="!n.isRead" (click)="markRead(n)">
+          <strong>{{ n.title }}</strong>
+          <p>{{ n.message }}</p>
+          <span class="time">{{ n.createdAt | date:'short' }}</span>
+        </div>
+      } @empty {
+        <p class="empty">No notifications</p>
+      }
+    </div>
+  }
+
+  @if (companyDashboard(); as cd) {
+    <p class="section-title">Company Overview</p>
+    <div class="metrics-grid company-grid">
+      <div class="metric-card"><div class="metric-body"><span class="metric-label">Total Plants</span><span class="metric-value">{{ cd.totalPlants }}</span></div></div>
+      <div class="metric-card"><div class="metric-body"><span class="metric-label">Capacity</span><span class="metric-value">{{ cd.totalCapacityMw | number:'1.1-1' }}<small>MW</small></span></div></div>
+      <div class="metric-card"><div class="metric-body"><span class="metric-label">Online Assets</span><span class="metric-value">{{ cd.onlineAssets }}/{{ cd.totalAssets }}</span></div></div>
+      <div class="metric-card metric-faults"><div class="metric-body"><span class="metric-label">Critical Alerts</span><span class="metric-value">{{ cd.criticalAlerts }}</span></div></div>
+      <div class="metric-card"><div class="metric-body"><span class="metric-label">Open Maintenance</span><span class="metric-value">{{ cd.openMaintenance }}</span></div></div>
+      <div class="metric-card"><div class="metric-body"><span class="metric-label">Equipment Health</span><span class="metric-value">{{ cd.equipmentHealth | number:'1.0-0' }}<small>%</small></span></div></div>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading">Loading dashboard</div>
+  } @else if (summary(); as s) {
+    <p class="section-title">Key Metrics</p>
+    <div class="metrics-grid">
+      <div class="metric-card metric-faults">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        </div>
+        <div class="metric-body">
+          <span class="metric-label">Faults Today</span>
+          <span class="metric-value">{{ s.faultsToday }}</span>
+          @if (s.criticalFaults > 0) {
+            <span class="metric-hint critical">{{ s.criticalFaults }} critical</span>
+          } @else {
+            <span class="metric-hint">No critical alerts</span>
+          }
+        </div>
+      </div>
+
+      <div class="metric-card metric-pr">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="metric-body">
+          <span class="metric-label">Performance Ratio</span>
+          <span class="metric-value">{{ s.currentPr | number:'1.1-1' }}<small>%</small></span>
+        </div>
+      </div>
+
+      <div class="metric-card metric-soiling">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        </div>
+        <div class="metric-body">
+          <span class="metric-label">Soiling Index</span>
+          <span class="metric-value">{{ s.soilingIndex | number:'1.1-1' }}<small>%</small></span>
+        </div>
+      </div>
+
+      <div class="metric-card metric-gen">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div class="metric-body">
+          <span class="metric-label">Generation Today</span>
+          <span class="metric-value">{{ s.todayGenerationKwh | number:'1.0-0' }}<small>kWh</small></span>
+          <span class="metric-hint">Target {{ s.targetGenerationKwh | number:'1.0-0' }} kWh</span>
+        </div>
+      </div>
+    </div>
+
+    @if (energyLoss(); as el) {
+      <p class="section-title">Energy Loss Detection</p>
+      <div class="energy-loss-card">
+        <div class="loss-row">
+          <span>Expected</span><strong>{{ el.expectedGenerationKwh | number:'1.0-0' }} kWh</strong>
+        </div>
+        <div class="loss-row">
+          <span>Actual</span><strong>{{ el.actualGenerationKwh | number:'1.0-0' }} kWh</strong>
+        </div>
+        <div class="loss-row highlight">
+          <span>Potential Loss</span><strong>{{ el.potentialLossKwh | number:'1.0-0' }} kWh ({{ el.lossPercent }}%)</strong>
+        </div>
+        <div class="causes">
+          <span class="causes-label">Possible Causes:</span>
+          @for (c of el.possibleCauses; track c) {
+            <span class="cause-tag">{{ c }}</span>
+          }
+        </div>
+      </div>
+    }
+
+    @if (s.totalAssets) {
+      <div class="overview-row">
+        <div class="stat-box">
+          <span class="stat-num metric-value">{{ s.onlineAssets }}/{{ s.totalAssets }}</span>
+          <span class="stat-label">Assets Online</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num metric-value">{{ s.equipmentHealthAvg | number:'1.0-0' }}%</span>
+          <span class="stat-label">Equipment Health</span>
+        </div>
+      </div>
+    }
+
+    @if (opsEfficiency(); as ops) {
+      <p class="section-title">Operations Efficiency</p>
+      <div class="overview-row">
+        <div class="stat-box">
+          <span class="stat-num metric-value">{{ ops.aiDetectedIssues }}</span>
+          <span class="stat-label">AI Detected Issues</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num metric-value">{{ ops.remoteMonitoringCoverage }}%</span>
+          <span class="stat-label">Remote Coverage</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num metric-value">{{ ops.criticalTasks }}/{{ ops.maintenanceTasks }}</span>
+          <span class="stat-label">Critical / Total Tasks</span>
+        </div>
+      </div>
+    }
+
+    <p class="section-title">Quick Actions</p>
+    <div class="quick-actions">
+      <a routerLink="/faults" class="action-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        <span>Fault Alerts</span>
+      </a>
+      <a routerLink="/tasks" class="action-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/></svg>
+        <span>Work Orders</span>
+      </a>
+      <a routerLink="/scada" class="action-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>SCADA Monitor</span>
+      </a>
+      <a routerLink="/assets" class="action-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/></svg>
+        <span>Assets</span>
+      </a>
+      <a routerLink="/cleaning" class="action-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/></svg>
+        <span>Cleaning</span>
+      </a>
+    </div>
+
+    <div class="overview-row">
+      <div class="stat-box">
+        <span class="stat-num metric-value">{{ s.pendingTasks }}</span>
+        <span class="stat-label">Pending Tasks</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num metric-value" [class.critical]="s.criticalFaults > 0">{{ s.criticalFaults }}</span>
+        <span class="stat-label">Critical Alerts</span>
+      </div>
+    </div>
+  }
+
+  <footer class="greeting">
+    <span class="user-role">{{ auth.currentUser()?.role }}</span>
+    {{ auth.currentUser()?.fullName }}
+  </footer>
+</div>
